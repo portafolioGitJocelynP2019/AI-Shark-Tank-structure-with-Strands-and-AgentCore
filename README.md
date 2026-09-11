@@ -26,6 +26,8 @@ La arquitectura separa el motor lógico de los agentes, la infraestructura de ej
 * `src/`: Contiene el código fuente de los agentes, la lógica de orquestación y las herramientas de integración.
 * `infrastructure/`: Plantillas de infraestructura como código (Terraform) para aprovisionar los recursos en AWS.
 * `analytics/`: Esquemas de datos y configuraciones para conectar la persistencia con QuickSight.
+ # Arquitectura
+<img width="1984" height="2152" alt="Gemini_Generated_Image_k8qqwgk8qqwgk8qq" src="https://github.com/user-attachments/assets/75798b09-9611-4ff7-a61e-256feb5706ea" />
 
 ---
 
@@ -38,6 +40,7 @@ La arquitectura separa el motor lógico de los agentes, la infraestructura de ej
 
 ### 1. Clonar el repositorio
 ```bash
+
 git clone [https://github.com/TU_USUARIO/ai-shark-tank.git](https://github.com/TU_USUARIO/ai-shark-tank.git)
 cd ai-shark-tank
 # AI-Shark-Tank-structure-with-Strands-and-AgentCore Estructura
@@ -58,6 +61,4 @@ ai-shark-tank/
 └── analytics/
     └── quicksight_dataset.json
 
-   # Arquitectura
-    <img width="1984" height="2152" alt="Gemini_Generated_Image_k8qqwgk8qqwgk8qq" src="https://github.com/user-attachments/assets/d5665373-eecb-4f3a-9c4b-9a7e408caf8d" />
-
+---
