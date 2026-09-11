@@ -59,5 +59,5 @@ ai-shark-tank/
     └── quicksight_dataset.json
 
    # Arquitectura
-    
-    <img width="1984" height="2152" alt="Gemini_Generated_Image_k8qqwgk8qqwgk8qq" src="https://github.com/user-attachments/assets/508687de-2873-405b-8084-4e889de070e0" />
+    <img width="1984" height="2152" alt="Gemini_Generated_Image_k8qqwgk8qqwgk8qq" src="https://github.com/user-attachments/assets/d5665373-eecb-4f3a-9c4b-9a7e408caf8d" />
+
