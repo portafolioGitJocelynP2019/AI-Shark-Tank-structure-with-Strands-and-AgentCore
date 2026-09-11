@@ -1,36 +1,6 @@
-# 🦈 AI Shark Tank - Multi-Agent System (AWS)
 
-Bienvenido a la demo interactiva. Este proyecto usa **Strands Agents** y **Amazon Bedrock AgentCore**.
-
-## Requisitos
-- Python 3.10+
-- AWS CLI configurado
-- Acceso a Amazon Bedrock y AgentCore
-
-## ¿Cómo desplegar con AI (Cursor/Claude)?
-Dado que eres desarrollador/arquitecto, puedes pedirle a tu IDE (Cursor) o a Claude lo siguiente:
-
-> "Actúa como experto en AWS CDK. Conviérteme el código de `agents.py` en un despliegue de AWS usando **AgentCore Runtime**. Necesito una tabla DynamoDB llamada 'SharkTankEvaluations' y los roles de IAM necesarios."
-
-## Despliegue con AgentCore CLI
-Si usas la CLI nativa de AgentCore:
-```bash
-# 1. Inicializa el proyecto
-agentcore create --name shark-tank --no-agent
-
-# 2. Despliega la infraestructura base
-agentcore deploy
-
-# 3. Empaqueta y sube tu código Strands al Runtime
-# (AgentCore Runtime hospeda y escala el agente)
-```
-
-## Integración con QuickSight Q
-1. Ve a la consola de **AWS QuickSight**.
-2. Conecta QuickSight a **Athena** (vía S3) o directamente a tu exportación de DynamoDB.
-3. Activa **QuickSight Q** (Preguntas en lenguaje natural).
-4. Escribe en el buscador del Dashboard: *"Mostrar startups rechazadas por bajo puntaje técnico pero alto puntaje de negocio"*.
 # 🦈 AI Shark Tank: Multi-Agent System on AWS
+Bienvenido a la demo interactiva. Este proyecto usa **Strands Agents** y **Amazon Bedrock AgentCore** Community Day Argentina.
 
 [![AWS](https://img.shields.io/badge/AWS-Bedrock%20%7C%20AgentCore%20%7C%20DynamoDB-orange?logo=amazon-aws)](https://aws.amazon.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org)
@@ -61,7 +31,37 @@ La arquitectura separa el motor lógico de los agentes, la infraestructura de ej
 * `analytics/`: Esquemas de datos y configuraciones para conectar la persistencia con QuickSight.
 
 ---
+# 🦈 AI Shark Tank - Multi-Agent System (AWS)
 
+## Requisitos
+- Python 3.10+
+- AWS CLI configurado
+- Acceso a Amazon Bedrock y AgentCore
+
+## ¿Cómo desplegar con AI (Cursor/Claude)?
+Dado que eres desarrollador/arquitecto, puedes pedirle a tu IDE (Cursor) o a Claude lo siguiente:
+
+> "Actúa como experto en AWS CDK. Conviérteme el código de `agents.py` en un despliegue de AWS usando **AgentCore Runtime**. Necesito una tabla DynamoDB llamada 'SharkTankEvaluations' y los roles de IAM necesarios."
+
+## Despliegue con AgentCore CLI
+Si usas la CLI nativa de AgentCore:
+```bash
+# 1. Inicializa el proyecto
+agentcore create --name shark-tank --no-agent
+
+# 2. Despliega la infraestructura base
+agentcore deploy
+
+# 3. Empaqueta y sube tu código Strands al Runtime
+# (AgentCore Runtime hospeda y escala el agente)
+```
+
+## Integración con QuickSight Q
+1. Ve a la consola de **AWS QuickSight**.
+2. Conecta QuickSight a **Athena** (vía S3) o directamente a tu exportación de DynamoDB.
+3. Activa **QuickSight Q** (Preguntas en lenguaje natural).
+4. Escribe en el buscador del Dashboard: *"Mostrar startups rechazadas por bajo puntaje técnico pero alto puntaje de negocio"*.
+---
 ## 🚀 Guía de Configuración y Ejecución Local
 
 ### Prerrequisitos
@@ -72,4 +72,4 @@ La arquitectura separa el motor lógico de los agentes, la infraestructura de ej
 ### 1. Clonar el repositorio
 ```bash
 git clone [https://github.com/TU_USUARIO/ai-shark-tank.git](https://github.com/TU_USUARIO/ai-shark-tank.git)
-cd ai-shark-tank![Uploading Gemini_Generated_Image_k8qqwgk8qqwgk8qq.png…]()
+cd ai-shark-tank
