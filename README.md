@@ -26,10 +26,14 @@ La arquitectura separa el motor lógico de los agentes, la infraestructura de ej
 
 ## 📂 Estructura del Proyecto
 
-* `src/`: Contiene el código fuente de los agentes, la lógica de orquestación y las herramientas de integración.
-* `infrastructure/`: Plantillas de infraestructura como código (Terraform) para aprovisionar los recursos en AWS.
-* `analytics/`: Esquemas de datos y configuraciones para conectar la persistencia con QuickSight.
-
+```text
+ai-shark-tank/
+├── src/
+│   └── lambda_function.py       # Lógica Multi-Agente (Strands SDK + boto3)
+├── infrastructure/
+│   └── infrastructure.yaml      # Plantilla AWS CloudFormation (IaC)
+├── requirements.txt             # Dependencias (strands-agents, boto3)
+└── README.md                    # Documentación del proyecto
 ---
 # 🦈 AI Shark Tank - Multi-Agent System (AWS)
 
