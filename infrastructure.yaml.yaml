@@ -1,0 +1,149 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AI Shark Tank: Multi-Agent Architecture (Channels, Orchestrator, LLM, Storage, Observability)'
+
+Resources:
+  # ==========================================
+  # 1. STORAGE: Amazon DynamoDB
+  # ==========================================
+  SharkTankTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: SharkTankEvaluations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: startup_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: startup_id
+          KeyType: HASH
+
+  # ==========================================
+  # 2. OBSERVABILITY & IAM: Permisos y X-Ray
+  # ==========================================
+  OrchestratorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess # Permite generar trazas en X-Ray
+      Policies:
+        - PolicyName: BedrockAndDynamoPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - dynamodb:PutItem
+                Resource: '*'
+
+  # ==========================================
+  # 3. ORCHESTRATOR: AWS Lambda Compute
+  # ==========================================
+  SharkTankFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: SharkTankOrchestrator
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt OrchestratorRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+              return {"statusCode": 200, "body": json.dumps("Lambda aprovisionada. Sube el deploy.zip con Strands.")}
+      Runtime: python3.11
+      Timeout: 90
+      MemorySize: 512
+      TracingConfig:
+        Mode: Active  # Habilita los Traces de AgentCore Observability (X-Ray)
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref SharkTankTable
+
+  # ==========================================
+  # 4. CHANNELS: Amazon API Gateway
+  # ==========================================
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: SharkTankAPI
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+
+  ApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt SharkTankFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  ApiRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: 'POST /pitch'
+      Target: !Join ['/', ['integrations', !Ref ApiIntegration]]
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: prod
+      AutoDeploy: true
+
+  LambdaApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt SharkTankFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/pitch'
+
+  # ==========================================
+  # 5. CHANNELS: S3 Bucket (Web Frontend)
+  # ==========================================
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${FrontendBucket.Arn}/*'
+
+Outputs:
+  ApiGatewayUrl:
+    Description: "Endpoint para invocar al Enjambre (Usa esto en tu frontend o Postman)"
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod/pitch'
+  FrontendWebsiteUrl:
+    Description: "URL de S3 para acceder a la interfaz web estática"
+    Value: !GetAtt FrontendBucket.WebsiteURL
